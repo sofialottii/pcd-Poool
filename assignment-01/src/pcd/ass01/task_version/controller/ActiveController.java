@@ -4,7 +4,6 @@ import pcd.ass01.task_version.model.board.Board;
 import pcd.ass01.task_version.view.ViewFrame;
 import pcd.ass01.task_version.view.ViewModel;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * This class is the main Controller of the project. He extends Thread.
@@ -22,13 +21,13 @@ public class ActiveController extends Thread {
     private final ViewModel viewModel;
     private volatile boolean running = true;
 
-    private final ConcurrentLinkedQueue<Cmd> cmdBuffer;
+    private final CmdBuffer cmdBuffer;
 
     public ActiveController(Board board, ViewFrame view, ViewModel viewModel) {
         this.board = board;
         this.view = view;
         this.viewModel = viewModel;
-        this.cmdBuffer = new ConcurrentLinkedQueue<>();
+        this.cmdBuffer = new CmdBuffer();
         this.view.addKeyListener(new PlayerInputHandler(this));
     }
 

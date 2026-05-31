@@ -44,7 +44,9 @@ public class ViewFrame extends JFrame {
     /**
      * asking the sync which frame we are about to draw, making Swing redraw
      * the panel and waiting for the drawing to be finished
-     * it delegates to EDT (per questo motivo è possibile richiamarlo nel controller)
+     * it delegates to EDT. Methods to qneueue and repaint are Thread-Safe methods,
+     * because they don't draw directly, but add in the EDT's Event Queue the fact
+     * that it should repaint as soon as possible
      */
     public void render() {
         long nf = sync.nextFrameToRender();
