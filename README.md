@@ -15,9 +15,3 @@ The `assignment-01` folder in the repo includes:
 * `ass01` folder, which includes the game in two different versions:
   1. `thread_version` based on Java multithreaded programming, using only default/platform threads
   2. `task_version` applying Task-based approach, using Java Executor Framework, where useful
-
- ## Assignment #02
-
- ## Assignment #03
-
- ## Assignment #04
