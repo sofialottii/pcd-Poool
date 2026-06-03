@@ -7,7 +7,6 @@ import pcd.ass01.task_version.model.GameState;
 import pcd.ass01.task_version.model.board.Board;
 import pcd.ass01.task_version.model.board.BoardConf;
 import pcd.ass01.task_version.model.board.LargeBoardConf;
-import pcd.ass01.task_version.model.board.MinimalBoardConf;
 import pcd.ass01.task_version.view.ViewFrame;
 import pcd.ass01.task_version.view.ViewModel;
 
