@@ -8,10 +8,7 @@ public class FSMain {
         System.out.println("miao");
         Vertx vertx = Vertx.vertx();
 
-        FSStatLib lib = new FSStatLib();
-        
-
-
+        vertx.deployVerticle(new FSStatEventLoop());
 
     }
 }

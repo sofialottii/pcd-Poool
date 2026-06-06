@@ -54,6 +54,31 @@ public class Report {
         return this.bands;
     }
 
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== REPORT STATISTICHE ===\n");
+        sb.append("File Totali Elaborati: ").append(this.totalFiles).append("\n");
+        sb.append("Distribuzione nelle Fasce:\n");
+
+        java.util.Map<Long, Integer> mappaOrdinata = new java.util.TreeMap<>(this.bands);
+
+        for (java.util.Map.Entry<Long, Integer> entry : mappaOrdinata.entrySet()) {
+            long chiave = entry.getKey();
+            int valore = entry.getValue();
+
+            if (chiave == OUT_OF_RANGE) {
+                sb.append("  [Fuori Limite (OUT_OF_RANGE)] -> ").append(valore).append(" file\n");
+            } else {
+                sb.append("  [Fascia fino a ").append(chiave).append(" byte] -> ").append(valore).append(" file\n");
+            }
+        }
+        sb.append("==========================");
+        return sb.toString();
+    }
+
+
 }
 
 /*
