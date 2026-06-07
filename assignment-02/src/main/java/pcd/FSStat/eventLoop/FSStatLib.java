@@ -1,12 +1,9 @@
 package pcd.FSStat.eventLoop;
 
 import io.vertx.core.AsyncResult;
-
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
-import io.vertx.core.file.FileProps;
 import io.vertx.core.file.FileSystem;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +14,6 @@ public class FSStatLib {
 
     public FSStatLib(FileSystem fs) {
         this.fs = fs;
-
     }
 
     /**
@@ -50,6 +46,7 @@ public class FSStatLib {
                 fs.props(file).onComplete((resProps) -> {
                    if (resProps.failed()){
                        fileProps.fail(resProps.cause());
+                       return;
                    }
 
                    if (resProps.result().isDirectory()){
@@ -69,7 +66,6 @@ public class FSStatLib {
 
                 });
             }
-
 
             Future.all(futures).onComplete(resAll -> {
                 if(resAll.succeeded()){
@@ -98,10 +94,6 @@ public class FSStatLib {
             }
 
         });
-
-
         return promise.future();
-
-
     }
 }

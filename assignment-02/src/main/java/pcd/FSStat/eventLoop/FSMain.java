@@ -5,10 +5,13 @@ import io.vertx.core.Vertx;
 public class FSMain {
 
     public static void main(String[] args) {
-        System.out.println("miao");
         Vertx vertx = Vertx.vertx();
 
-        vertx.deployVerticle(new FSStatEventLoop());
+        final String dir = "./";
+        final long maxFS = 1000;
+        final int nb = 10;
+
+        vertx.deployVerticle(new FSStatEventLoop(dir, maxFS, nb));
 
     }
 }

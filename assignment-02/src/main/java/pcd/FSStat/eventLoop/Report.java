@@ -14,12 +14,10 @@ public class Report {
     private final long chunkSize;
     private NavigableMap<Long, Integer> bands = new TreeMap<>();
 
-
     public Report(long maxFS, int nb) {
         this.totalFiles = 0;
         this.maxFS = maxFS;
         this.nb = nb;
-
         this.chunkSize = maxFS / nb;
 
         for (int i = 0; i < this.nb; i++) {
@@ -30,7 +28,6 @@ public class Report {
         this.bands.put(OUT_OF_RANGE, 0);
 
     }
-
 
     public void addFile(long size) {
         //aumentiamo il numero di file visti
@@ -54,53 +51,21 @@ public class Report {
         return this.bands;
     }
 
-
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== REPORT STATISTICHE ===\n");
-        sb.append("File Totali Elaborati: ").append(this.totalFiles).append("\n");
-        sb.append("Distribuzione nelle Fasce:\n");
+        String res = "Total files founded: " + this.totalFiles + "\n";
+        res += "Distribution:\n";
 
-        java.util.Map<Long, Integer> mappaOrdinata = new java.util.TreeMap<>(this.bands);
+        for (Long key : this.bands.keySet()) {
+            int numFile = this.bands.get(key);
 
-        for (java.util.Map.Entry<Long, Integer> entry : mappaOrdinata.entrySet()) {
-            long chiave = entry.getKey();
-            int valore = entry.getValue();
-
-            if (chiave == OUT_OF_RANGE) {
-                sb.append("  [Fuori Limite (OUT_OF_RANGE)] -> ").append(valore).append(" file\n");
+            if (key == OUT_OF_RANGE) {
+                res += " - Out of range: " + numFile + "files\n";
             } else {
-                sb.append("  [Fascia fino a ").append(chiave).append(" byte] -> ").append(valore).append(" file\n");
+                res += " - Up to " + key + " bytes: " + numFile + " files\n";
             }
         }
-        sb.append("==========================");
-        return sb.toString();
+
+        return res;
     }
-
-
 }
-
-/*
-
-    ABBIAMO PENSATO COSI:
-    dobbiamo avere un totalFiles (semplicemente int, che potremmo aumentare a mano a mano che viene visitato il file)
-
-    e una mappa che ha come chiave la fascia di intervallo (o meglio, la fine dell'intervallo),
-    come valore il numero di file che appartengono a quell'intervallo
-
-    CHIAVE - VALORE
-    100        4     -> ci sono 4 file che si trovano tra 0 e 100MB
-    200        3     -> ci sono 3 file che si trovano tra 101 e 200MB
-    300        eccetera
-    400
-    500
-    ...
-    MAX         5     -> ci sono 5 file che superano la dimensione massima
-
-*/
-
-
-//19 giugno h 16
-//24 giugno h ???
-

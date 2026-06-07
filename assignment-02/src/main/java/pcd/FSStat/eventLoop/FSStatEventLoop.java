@@ -1,12 +1,22 @@
 package pcd.FSStat.eventLoop;
 
 
-import io.vertx.core.*;
+import io.vertx.core.Future;
+import io.vertx.core.VerticleBase;
 import io.vertx.core.file.FileSystem;
 
 
 public class FSStatEventLoop extends VerticleBase {
 
+    private final String dir;
+    private final long maxFS;
+    private final int nb;
+
+    public FSStatEventLoop(String dir, long maxFS, int nb) {
+        this.dir = dir;
+        this.maxFS = maxFS;
+        this.nb = nb;
+    }
 
     public Future<?> start() throws Exception {
 
@@ -14,16 +24,12 @@ public class FSStatEventLoop extends VerticleBase {
 
         FSStatLib lib = new FSStatLib(fs);
 
-        Future<Report> report = lib.getFSReport("./", 1000, 10);
-
-        /*vertx.setTimer(1000L, (Handler<Long>) report.onComplete((res) -> {
-
-                    System.out.println(res.result().toString());
-        }));*/
+        Future<Report> report = lib.getFSReport(dir, maxFS, nb);
 
         report.onComplete(( res) -> {
             System.out.println(res.result().toString());
 
+            this.vertx.close();
         });
 
         return super.start();
