@@ -60,7 +60,7 @@ public class Report {
             int numFile = this.bands.get(key);
 
             if (key == OUT_OF_RANGE) {
-                res += " - Out of range: " + numFile + "files\n";
+                res += " - Out of range: " + numFile + " files\n";
             } else {
                 res += " - Up to " + key + " bytes: " + numFile + " files\n";
             }
