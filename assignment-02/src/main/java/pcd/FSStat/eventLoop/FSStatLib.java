@@ -10,7 +10,7 @@ import java.util.List;
 
 public class FSStatLib {
 
-    FileSystem fs;
+    private final FileSystem fs;
 
     public FSStatLib(FileSystem fs) {
         this.fs = fs;
