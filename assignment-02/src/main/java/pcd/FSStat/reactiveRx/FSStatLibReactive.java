@@ -8,7 +8,13 @@ import java.util.concurrent.TimeUnit;
 
 public class FSStatLibReactive {
 
-    private static void recursiveFileSearch(FlowableEmitter<Long> emitter, String dirPath){
+    /**
+     * This support method handle the recursions calling himself when it finds a directory.
+     * When it finds a file emits on the current stream the length of the file
+     * @param emitter
+     * @param dirPath
+     */
+    private static void recursiveFileSearch(FlowableEmitter<Long> emitter, String dirPath) {
         try {
             File dir = new File(dirPath);
             File[] directoryListing = dir.listFiles();
@@ -16,23 +22,24 @@ public class FSStatLibReactive {
                 for (File child : directoryListing) {
                     if (child.isDirectory()) {
                         recursiveFileSearch(emitter, child.getAbsolutePath());
-                    }else{
+                    } else {
                         emitter.onNext(child.length());
                     }
                 }
             } else {
-                // Handle the case where dir is not really a directory.
-                // Checking dir.isDirectory() above would not be sufficient
-                // to avoid race conditions with another process that deletes
-                // directories.
+                emitter.onError(new Throwable(dir + "is not a directory"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("esco");
+            emitter.onError(e);
         }
     }
 
-    private static Flowable<Long> getColdStream(String dirPath){
+    /**
+     * Prepares a cold Stream using a Flowable
+     * @param dirPath
+     * @return a Flowable which contains the size of the files
+     */
+    private static Flowable<Long> getColdStream(String dirPath) {
         Flowable<Long> source = Flowable.create(emitter -> {
             new Thread(() -> {
                 recursiveFileSearch(emitter, dirPath);
@@ -43,7 +50,14 @@ public class FSStatLibReactive {
         return source;
     }
 
-    public Report getFSReport(String dir, long maxFS, int nb){
+    /**
+     * Create a report by collecting data from the stream
+     * @param dir
+     * @param maxFS
+     * @param nb
+     * @return report completed
+     */
+    public Report getFSReport(String dir, long maxFS, int nb) {
 
         Report report = new Report(maxFS, nb);
 
@@ -51,15 +65,11 @@ public class FSStatLibReactive {
 
         source.onBackpressureBuffer(5_000, () -> {
             System.out.println("HELP!");
-        }).subscribeOn(Schedulers.computation())
-                .blockingSubscribe(size -> {
-                            report.addFile(size);
-                        },
-                        error -> {
-                            System.err.println("Errore nel flusso: " + error.getMessage());
-
-                        }
-                );
+        }).blockingSubscribe(report::addFile,
+                error -> {
+                    System.err.println("Flow error: " + error.getMessage());
+                }
+        );
         return report;
     }
 }
